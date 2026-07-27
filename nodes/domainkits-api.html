@@ -1,0 +1,30 @@
+<script type="text/javascript">
+	RED.nodes.registerType('domainkits-api', {
+		category: 'config',
+		defaults: {
+			name: { value: '' },
+		},
+		credentials: {
+			apiKey: { type: 'password' },
+		},
+		label: function () {
+			return this.name || 'DomainKits API';
+		},
+	});
+</script>
+
+<script type="text/html" data-template-name="domainkits-api">
+	<div class="form-row">
+		<label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-config-input-name" placeholder="DomainKits API" />
+	</div>
+	<div class="form-row">
+		<label for="node-config-input-apiKey"><i class="fa fa-key"></i> API Key</label>
+		<input type="password" id="node-config-input-apiKey" placeholder="dk_xxxxxxxxxxxxxxxx" />
+	</div>
+</script>
+
+<script type="text/html" data-help-name="domainkits-api">
+	<p>Credentials for the DomainKits API. One key authenticates every DomainKits endpoint.</p>
+	<p>Keys start with <code>dk_</code> and come from <a href="https://domainkits.com/pricing" target="_blank">domainkits.com</a>. API access requires a Premium or higher plan.</p>
+</script>

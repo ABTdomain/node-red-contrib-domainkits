@@ -1,0 +1,210 @@
+<script type="text/javascript">
+	(function () {
+		var FIELDS = {
+			nrds: ['keyword', 'tld', 'position', 'length', 'type', 'days_range', 'reg_date', 'period', 'has_sale', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
+			expired: ['keyword', 'tld', 'position', 'length', 'type', 'status', 'age_range', 'hold', 'auction_date', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
+			aged: ['keyword', 'tld', 'position', 'length', 'type', 'age_range', 'has_sale', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
+			active: ['keyword', 'tld', 'position', 'length', 'type', 'status', 'no_number', 'no_hyphen', 'sort', 'limit', 'offset'],
+			deleted: ['keyword', 'tld', 'position', 'length', 'type', 'age_range', 'hold', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
+			market: ['keyword', 'tld', 'position', 'length', 'type', 'platform', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
+		};
+		var ALL = ['keyword', 'tld', 'position', 'length', 'type', 'status', 'age_range', 'days_range', 'reg_date', 'period', 'has_sale', 'hold', 'auction_date', 'platform', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'];
+
+		RED.nodes.registerType('domainkits-search', {
+			category: 'network',
+			color: '#7DD3FC',
+			icon: 'font-awesome/fa-globe',
+			inputs: 1,
+			outputs: 1,
+			paletteLabel: 'domain search',
+			defaults: {
+				name: { value: '' },
+				api: { value: '', type: 'domainkits-api', required: true },
+				resource: { value: 'nrds' },
+				keyword: { value: '' },
+				tld: { value: 'com' },
+				position: { value: '' },
+				length: { value: '' },
+				type: { value: '' },
+				status: { value: '' },
+				age_range: { value: '' },
+				days_range: { value: '' },
+				reg_date: { value: '' },
+				period: { value: '' },
+				has_sale: { value: false },
+				hold: { value: '' },
+				auction_date: { value: '' },
+				platform: { value: '' },
+				no_number: { value: false },
+				no_hyphen: { value: false },
+				exclude: { value: '' },
+				sort: { value: '' },
+				limit: { value: 15 },
+				offset: { value: 0 },
+			},
+			label: function () {
+				return this.name || 'domain search: ' + (this.resource || 'nrds');
+			},
+			oneditprepare: function () {
+				function refresh() {
+					var resource = $('#node-input-resource').val() || 'nrds';
+					var visible = FIELDS[resource] || [];
+					ALL.forEach(function (field) {
+						$('#form-row-' + field).toggle(visible.indexOf(field) !== -1);
+					});
+				}
+				$('#node-input-resource').on('change', refresh);
+				refresh();
+			},
+		});
+	})();
+</script>
+
+<script type="text/html" data-template-name="domainkits-search">
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="domain search" />
+	</div>
+	<div class="form-row">
+		<label for="node-input-api"><i class="fa fa-key"></i> API</label>
+		<input type="text" id="node-input-api" />
+	</div>
+	<div class="form-row">
+		<label for="node-input-resource"><i class="fa fa-database"></i> Resource</label>
+		<select id="node-input-resource">
+			<option value="nrds">Newly registered</option>
+			<option value="expired">Expired</option>
+			<option value="aged">Aged</option>
+			<option value="active">Active</option>
+			<option value="deleted">Deleted</option>
+			<option value="market">For sale</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-keyword">
+		<label for="node-input-keyword"><i class="fa fa-search"></i> Keyword</label>
+		<input type="text" id="node-input-keyword" placeholder="min 3 characters, optional" />
+	</div>
+	<div class="form-row" id="form-row-tld">
+		<label for="node-input-tld"><i class="fa fa-globe"></i> TLD</label>
+		<input type="text" id="node-input-tld" placeholder="com" />
+	</div>
+	<div class="form-row" id="form-row-position">
+		<label for="node-input-position"><i class="fa fa-align-left"></i> Position</label>
+		<select id="node-input-position">
+			<option value="">Anywhere</option>
+			<option value="start">Start</option>
+			<option value="middle">Middle</option>
+			<option value="end">End</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-length">
+		<label for="node-input-length"><i class="fa fa-arrows-h"></i> Length</label>
+		<input type="text" id="node-input-length" placeholder="5-10, 10, 8-12" />
+	</div>
+	<div class="form-row" id="form-row-type">
+		<label for="node-input-type"><i class="fa fa-font"></i> Composition</label>
+		<select id="node-input-type">
+			<option value="">Any</option>
+			<option value="all_alpha">Letters only</option>
+			<option value="all_number">Digits only</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-status">
+		<label for="node-input-status"><i class="fa fa-hourglass-half"></i> Status</label>
+		<input type="text" id="node-input-status" placeholder="expired: expired | redemption | pending_delete" />
+	</div>
+	<div class="form-row" id="form-row-age_range">
+		<label for="node-input-age_range"><i class="fa fa-calendar"></i> Age</label>
+		<input type="text" id="node-input-age_range" placeholder="10-20, 25, 20-25" />
+	</div>
+	<div class="form-row" id="form-row-days_range">
+		<label for="node-input-days_range"><i class="fa fa-calendar-o"></i> Days range</label>
+		<select id="node-input-days_range">
+			<option value="">Any</option>
+			<option value="0-10">0-10</option>
+			<option value="10-20">10-20</option>
+			<option value="20+">20+</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-reg_date">
+		<label for="node-input-reg_date"><i class="fa fa-calendar-check-o"></i> Reg date</label>
+		<input type="text" id="node-input-reg_date" placeholder="2026-07-10, 2026-07, 2026-07-01:2026-07-25" />
+	</div>
+	<div class="form-row" id="form-row-period">
+		<label for="node-input-period"><i class="fa fa-clock-o"></i> Term (years)</label>
+		<select id="node-input-period">
+			<option value="">Any</option>
+			<option value="1">1</option>
+			<option value="2-5">2-5</option>
+			<option value="6+">6+</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-hold">
+		<label for="node-input-hold"><i class="fa fa-pause"></i> Hold</label>
+		<select id="node-input-hold">
+			<option value="">Any</option>
+			<option value="has_hold">Has hold</option>
+			<option value="no_hold">No hold</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-auction_date">
+		<label for="node-input-auction_date"><i class="fa fa-gavel"></i> Auction date</label>
+		<input type="text" id="node-input-auction_date" placeholder="today, tomorrow, 2026-08-01" />
+	</div>
+	<div class="form-row" id="form-row-platform">
+		<label for="node-input-platform"><i class="fa fa-shopping-cart"></i> Marketplace</label>
+		<input type="text" id="node-input-platform" placeholder="Sedo, Godaddy, Afternic, Dan, Hugedomains, 4.cn" />
+	</div>
+	<div class="form-row" id="form-row-exclude">
+		<label for="node-input-exclude"><i class="fa fa-ban"></i> Exclude</label>
+		<input type="text" id="node-input-exclude" placeholder="negative keywords, comma separated" />
+	</div>
+	<div class="form-row" id="form-row-sort">
+		<label for="node-input-sort"><i class="fa fa-sort"></i> Sort</label>
+		<input type="text" id="node-input-sort" placeholder="reg_date_desc, age_desc, length_asc" />
+	</div>
+	<div class="form-row" id="form-row-limit">
+		<label for="node-input-limit"><i class="fa fa-list-ol"></i> Limit</label>
+		<input type="number" id="node-input-limit" min="1" max="500" />
+	</div>
+	<div class="form-row" id="form-row-offset">
+		<label for="node-input-offset"><i class="fa fa-step-forward"></i> Offset</label>
+		<input type="number" id="node-input-offset" min="0" />
+	</div>
+	<div class="form-row" id="form-row-no_number">
+		<label style="width:auto" for="node-input-no_number"><i class="fa fa-hashtag"></i> Exclude digits</label>
+		<input type="checkbox" id="node-input-no_number" style="width:auto; vertical-align:top" />
+	</div>
+	<div class="form-row" id="form-row-no_hyphen">
+		<label style="width:auto" for="node-input-no_hyphen"><i class="fa fa-minus"></i> Exclude hyphens</label>
+		<input type="checkbox" id="node-input-no_hyphen" style="width:auto; vertical-align:top" />
+	</div>
+	<div class="form-row" id="form-row-has_sale">
+		<label style="width:auto" for="node-input-has_sale"><i class="fa fa-tags"></i> Listed for sale only</label>
+		<input type="checkbox" id="node-input-has_sale" style="width:auto; vertical-align:top" />
+	</div>
+</script>
+
+<script type="text/html" data-help-name="domainkits-search">
+	<p>Searches the DomainKits domain inventories. The default resource is newly registered domains: every domain registered in the last 60 days, refreshed daily. The same node also covers expired, aged, active, deleted and for-sale domains.</p>
+
+	<h3>Inputs</h3>
+	<dl class="message-properties">
+		<dt class="optional">query <span class="property-type">object</span></dt>
+		<dd>Overrides any configured parameter for this run, e.g. <code>{"keyword":"clinic","reg_date":"2026-07-10","limit":50}</code>. Keys match the REST parameters. <code>query.resource</code> switches the resource per message.</dd>
+	</dl>
+
+	<h3>Outputs</h3>
+	<dl class="message-properties">
+		<dt>payload <span class="property-type">array</span></dt>
+		<dd>One object per domain. Newly registered results carry <code>domain</code>, <code>registered_date</code>, <code>expiry_date</code>, <code>tld_count</code>; other resources add <code>age</code>, <code>status</code> or <code>marketplace</code>.</dd>
+		<dt>total <span class="property-type">number</span></dt>
+		<dd>Size of the full result set. Page through it with <code>offset</code>; a single request returns at most 500 rows.</dd>
+	</dl>
+
+	<h3>Details</h3>
+	<p><b>gTLDs only.</b> Country-code TLDs are not indexed: a query for <code>.de</code> or <code>.io</code> returns an empty result set, not an error.</p>
+	<p><b>No PII.</b> Responses contain no personal data: domain name, dates, status and TLD counts only.</p>
+	<p><code>length</code> and <code>age_range</code> accept a preset band (<code>5-10</code>), an exact value (<code>10</code>), or a range (<code>8-12</code>). <code>reg_date</code> accepts a day, month, year, or <code>from:to</code> range.</p>
+	<p>The same key works across every DomainKits endpoint. Rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
+</script>

@@ -1,0 +1,117 @@
+<script type="text/javascript">
+	(function () {
+		var LABELS = {
+			whois: 'Domain',
+			dns: 'Domain',
+			safety: 'Domain',
+			'ip-lookup': 'IP or domain',
+			registrar: 'Registrar name',
+			'status-guide': 'EPP status',
+			'tld-check': 'Name prefix',
+			typosquat: 'Domain',
+			'ns-reverse': 'Nameserver',
+			'monitor-changes': 'Keyword',
+			'ct-subdomains': 'Domain',
+			'ct-certs': 'Domain',
+			'ct-search': 'Keyword',
+			'tld-trends-newly': 'TLD',
+			'tld-trends-active': 'TLD',
+			'keyword-trends-hot': '',
+			'keyword-trends-emerging': '',
+			'keyword-trends-prefix': 'Prefix',
+			usage: '',
+		};
+
+		RED.nodes.registerType('domainkits-lookup', {
+			category: 'network',
+			color: '#7DD3FC',
+			icon: 'font-awesome/fa-info-circle',
+			inputs: 1,
+			outputs: 1,
+			paletteLabel: 'domain lookup',
+			defaults: {
+				name: { value: '' },
+				api: { value: '', type: 'domainkits-api', required: true },
+				operation: { value: 'whois' },
+				target: { value: '' },
+			},
+			label: function () {
+				return this.name || 'domain lookup: ' + (this.operation || 'whois');
+			},
+			oneditprepare: function () {
+				function refresh() {
+					var op = $('#node-input-operation').val() || 'whois';
+					var label = LABELS[op];
+					$('#form-row-target').toggle(label !== '');
+					$('#label-target').text(label || 'Target');
+				}
+				$('#node-input-operation').on('change', refresh);
+				refresh();
+			},
+		});
+	})();
+</script>
+
+<script type="text/html" data-template-name="domainkits-lookup">
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="domain lookup" />
+	</div>
+	<div class="form-row">
+		<label for="node-input-api"><i class="fa fa-key"></i> API</label>
+		<input type="text" id="node-input-api" />
+	</div>
+	<div class="form-row">
+		<label for="node-input-operation"><i class="fa fa-wrench"></i> Operation</label>
+		<select id="node-input-operation">
+			<option value="whois">WHOIS</option>
+			<option value="dns">DNS records</option>
+			<option value="safety">Safety check</option>
+			<option value="ip-lookup">IP lookup</option>
+			<option value="registrar">Registrar lookup</option>
+			<option value="status-guide">EPP status guide</option>
+			<option value="tld-check">TLD availability</option>
+			<option value="typosquat">Typosquat scan</option>
+			<option value="ns-reverse">Reverse nameserver</option>
+			<option value="monitor-changes">Domain changes</option>
+			<option value="ct-subdomains">CT subdomains</option>
+			<option value="ct-certs">CT certificates</option>
+			<option value="ct-search">CT search</option>
+			<option value="tld-trends-newly">TLD trends, new registrations</option>
+			<option value="tld-trends-active">TLD trends, active volume</option>
+			<option value="keyword-trends-hot">Keyword trends, hot</option>
+			<option value="keyword-trends-emerging">Keyword trends, emerging</option>
+			<option value="keyword-trends-prefix">Keyword trends, prefix</option>
+			<option value="usage">Account usage</option>
+		</select>
+	</div>
+	<div class="form-row" id="form-row-target">
+		<label for="node-input-target"><i class="fa fa-crosshairs"></i> <span id="label-target">Target</span></label>
+		<input type="text" id="node-input-target" placeholder="example.com" />
+	</div>
+</script>
+
+<script type="text/html" data-help-name="domainkits-lookup">
+	<p>Single lookups and reports against the DomainKits API: WHOIS, DNS, safety, IP geolocation, registrar, EPP status, TLD availability, typosquat variants, reverse nameserver, domain change monitoring, Certificate Transparency and trends.</p>
+
+	<h3>Inputs</h3>
+	<dl class="message-properties">
+		<dt class="optional">target <span class="property-type">string</span></dt>
+		<dd>Overrides the configured target for this run.</dd>
+		<dt class="optional">operation <span class="property-type">string</span></dt>
+		<dd>Overrides the configured operation.</dd>
+		<dt class="optional">query <span class="property-type">object</span></dt>
+		<dd>Extra REST parameters for the chosen operation, e.g. <code>{"type":"all_number","limit":50}</code> for reverse nameserver.</dd>
+	</dl>
+
+	<h3>Outputs</h3>
+	<dl class="message-properties">
+		<dt>payload <span class="property-type">object | array</span></dt>
+		<dd>The lookup result. List operations also set <code>msg.total</code>.</dd>
+	</dl>
+
+	<h3>Details</h3>
+	<p><b>No PII.</b> WHOIS results are limited to registrar, dates, status codes and nameservers; registrant names, emails, addresses and phone numbers are not returned.</p>
+	<p>WHOIS, DNS, safety, IP lookup and Certificate Transparency work on any domain, ccTLDs included. The search indexes and trends are gTLD only.</p>
+	<p>The same key works across every DomainKits endpoint. Rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
+</script>
