@@ -1,6 +1,6 @@
 {
 	"name": "node-red-contrib-domainkits",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Node-RED nodes for the DomainKits domain data API. Search newly registered, expired, aged and for-sale domains, plus WHOIS, DNS, CT logs and trends. One credential covers every endpoint.",
 	"license": "MIT",
 	"homepage": "https://domainkits.com/dev",
@@ -22,8 +22,9 @@
 		"domainkits"
 	],
 	"author": {
-		"name": "DomainKits",
-		"email": "info@domainkits.com"
+		"name": "DomainKits (ABTdomain)",
+		"email": "info@domainkits.com",
+		"url": "https://domainkits.com/about"
 	},
 	"repository": {
 		"type": "git",

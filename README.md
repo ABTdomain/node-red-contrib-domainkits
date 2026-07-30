@@ -2,6 +2,8 @@
 
 Query the [DomainKits](https://domainkits.com) domain data API from Node-RED.
 
+This is the official Node-RED node for the DomainKits API, published and maintained by the DomainKits team. DomainKits is built and operated by [ABTdomain, a domain intelligence platform](https://abtdomain.com), which also owns the GitHub organisation hosting this repository. The relationship is stated on [domainkits.com/about](https://domainkits.com/about).
+
 The lead use case is newly registered domain search: every domain registered in the last 60 days across the indexed gTLDs, refreshed daily, filterable by keyword, registration date, length, composition and more. The same two nodes also cover expired, aged, active, deleted and for-sale domain search, plus WHOIS, DNS, safety, Certificate Transparency and trend lookups.
 
 DomainKits is one API with a shared key across every endpoint. One credential in Node-RED covers all of it.
@@ -81,6 +83,8 @@ Quotas follow your account and vary by plan. Every response carries `X-RateLimit
 - [n8n-nodes-domainkits](https://www.npmjs.com/package/n8n-nodes-domainkits), the same API for n8n
 - [@domainkits/sdk](https://www.npmjs.com/package/@domainkits/sdk), the same API for TypeScript
 - [domainkits](https://pypi.org/project/domainkits/), the same API for Python
+- [About DomainKits and ABTdomain](https://domainkits.com/about)
+- [ABTdomain](https://abtdomain.com)
 
 ## License
 
