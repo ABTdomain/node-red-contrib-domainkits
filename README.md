@@ -2,7 +2,7 @@
 
 Query the [DomainKits](https://domainkits.com) domain data API from Node-RED.
 
-This is the official Node-RED node for the DomainKits API, published and maintained by the DomainKits team. DomainKits is built and operated by [ABTdomain, a domain intelligence platform](https://abtdomain.com), which also owns the GitHub organisation hosting this repository. The relationship is stated on [domainkits.com/about](https://domainkits.com/about).
+This is the official Node-RED node for the DomainKits API, published and maintained by the DomainKits team. DomainKits is built and operated by Lyalpha GmbH, with domain data and infrastructure provided by [ABTdomain](https://abtdomain.com), our domain intelligence and data aggregation platform. This repository is hosted under the ABTdomain GitHub organisation. Learn more about the relationship at [domainkits.com/about](https://domainkits.com/about).
 
 The lead use case is newly registered domain search: every domain registered in the last 60 days across the indexed gTLDs, refreshed daily, filterable by keyword, registration date, length, composition and more. The same two nodes also cover expired, aged, active, deleted and for-sale domain search, plus WHOIS, DNS, safety, Certificate Transparency and trend lookups.
 
