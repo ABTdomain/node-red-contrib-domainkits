@@ -28,11 +28,12 @@ Add the key once in the **DomainKits API** configuration node. Both nodes share 
 
 ### domain search
 
-Searches six domain inventories. Pick the resource in the edit dialog; the filter fields adjust to match.
+Searches seven domain inventories. Pick the resource in the edit dialog; the filter fields adjust to match.
 
 | Resource | What it searches |
 |---|---|
-| Newly registered (default) | Domains registered in the last 60 days |
+| Newly registered (default) | Domains registered in the last 60 days, from the zone files |
+| Newly registered, live feed | Domains registered in the last 3 days, from Certificate Transparency |
 | Expired | Domains in the deletion cycle: expired, redemption, pending delete |
 | Aged | Domains with 5 to 20+ years of registration history |
 | Active | Currently registered domains |
@@ -48,6 +49,8 @@ Configure filters in the edit dialog, or override any of them per message via `m
 ```
 
 `length` and `age_range` accept a preset band (`5-10`), an exact value (`10`), or a range (`8-12`). `reg_date` accepts a day (`2026-07-10`), a month (`2026-07`), a year (`2026`), or a `from:to` range.
+
+The two registration feeds read from different places, so they answer different questions. Newly registered reads the zone files and holds 60 days; it is the complete view for the generic TLDs. The live feed reads Certificate Transparency and holds 3 days: a name reaches it once a certificate is issued, which can be before the zone files carry it, so it surfaces names the zone feed cannot show yet. A live row carries `tld` in place of `tld_count`, and the endpoint runs on a smaller per-minute quota. Switch to it per message with `{ "resource": "nrds-live" }` in `msg.query`.
 
 **Output**: `msg.payload` is an array of domains; `msg.total` is the size of the full result set. A single request returns at most 500 rows; page with `offset`.
 
@@ -67,7 +70,7 @@ Set the operation and target in the edit dialog, or per message via `msg.operati
 
 ## Coverage
 
-**gTLDs only** for the search resources and trends. The index covers generic TLDs: `.com`, `.net`, `.org`, `.info`, `.biz`, `.xyz`, `.online`, `.site`, `.top`, `.club`, `.live`, `.app`, `.dev` and others. Country-code TLDs are not indexed: a query for `.de`, `.io`, `.co` or `.us` returns an empty result set, not an error.
+**gTLDs only** for the zone based search resources and trends. The index covers generic TLDs: `.com`, `.net`, `.org`, `.info`, `.biz`, `.xyz`, `.online`, `.site`, `.top`, `.club`, `.live`, `.app`, `.dev` and others. Country-code TLDs are not indexed: a query for `.de`, `.co` or `.us` returns an empty result set, not an error. The live feed is the exception and also carries `.ai` and `.io`.
 
 WHOIS, DNS, safety, IP lookup and Certificate Transparency work on any domain, ccTLDs included.
 

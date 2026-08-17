@@ -3,6 +3,7 @@ module.exports = function (RED) {
 	const COMMON = ['keyword', 'tld', 'position', 'length', 'type', 'no_number', 'no_hyphen', 'sort', 'limit', 'offset'];
 	const RESOURCES = {
 		nrds: [...COMMON, 'exclude', 'days_range', 'reg_date', 'period', 'has_sale'],
+		'nrds-live': [...COMMON, 'exclude', 'days_range'],
 		expired: [...COMMON, 'exclude', 'status', 'age_range', 'hold', 'auction_date'],
 		aged: [...COMMON, 'exclude', 'age_range', 'has_sale'],
 		active: [...COMMON, 'status'],

@@ -113,5 +113,6 @@
 	<h3>Details</h3>
 	<p><b>No PII.</b> WHOIS results are limited to registrar, dates, status codes and nameservers; registrant names, emails, addresses and phone numbers are not returned.</p>
 	<p>WHOIS, DNS, safety, IP lookup and Certificate Transparency work on any domain, ccTLDs included. The search indexes and trends are gTLD only.</p>
+	<p><b>Certificate Transparency parameters.</b> The three CT operations take <code>after</code>, <code>before</code>, <code>scope</code>, <code>sort</code>, <code>issuer</code>, <code>cert_type</code> and <code>limit</code> through <code>msg.query</code>. <code>scope</code> is <code>valid</code> for the running half year or <code>all</code> back to 2020; <code>after</code> and <code>before</code> take <code>YYYY-MM-DD</code> and filter on log time. CT search also takes <code>field</code>: <code>reg</code> matches the registered domain and returns every hostname under it, <code>sld</code> matches the subdomain label only, <code>domain</code> matches anywhere in the hostname.</p>
 	<p>The same key works across every DomainKits endpoint. Rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
 </script>
