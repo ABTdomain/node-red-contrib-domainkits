@@ -1,15 +1,20 @@
 module.exports = function (RED) {
 	const BASE_URL = 'https://premium-api.domainkits.com/api/v1';
-	const COMMON = ['keyword', 'tld', 'position', 'length', 'type', 'no_number', 'no_hyphen', 'sort', 'limit', 'offset'];
+	const COMMON = [
+		'query', 'tld', 'position', 'length_min', 'length_max',
+		'has_number', 'all_number', 'all_alpha', 'has_hyphen',
+		'exclude_query', 'sort', 'limit', 'offset',
+	];
 	const RESOURCES = {
-		nrds: [...COMMON, 'exclude', 'days_range', 'reg_date', 'period', 'has_sale'],
-		'nrds-live': [...COMMON, 'exclude', 'days_range'],
-		expired: [...COMMON, 'exclude', 'status', 'age_range', 'hold', 'auction_date'],
-		aged: [...COMMON, 'exclude', 'age_range', 'has_sale'],
-		active: [...COMMON, 'status'],
-		deleted: [...COMMON, 'exclude', 'age_range', 'hold'],
-		market: [...COMMON, 'exclude', 'platform'],
+		nrds: [...COMMON, 'create_date_start', 'create_date_end', 'period_min', 'period_max', 'has_sale'],
+		'nrds-live': [...COMMON, 'create_date_start', 'create_date_end'],
+		expired: [...COMMON, 'status', 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'auction_date_start', 'auction_date_end', 'has_hold'],
+		aged: [...COMMON, 'age_min', 'age_max', 'has_sale'],
+		active: [...COMMON, 'has_sale'],
+		deleted: [...COMMON, 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'has_hold'],
+		market: [...COMMON, 'platform', 'listed_days_min', 'listed_days_max', 'has_sale'],
 	};
+	const COMPOSITION = ['has_number', 'all_number', 'all_alpha', 'has_hyphen'];
 
 	function DomainKitsSearchNode(config) {
 		RED.nodes.createNode(this, config);
@@ -39,13 +44,20 @@ module.exports = function (RED) {
 				query.set(key, String(value));
 			}
 
+			// The editor offers one composition dropdown; msg.query may instead
+			// carry the four engine booleans directly and then wins.
+			if (config.composition && !COMPOSITION.some((k) => override[k] !== undefined)) {
+				const [key, value] = config.composition.split('=');
+				if (allowed.includes(key)) query.set(key, value);
+			}
+
 			node.status({ fill: 'blue', shape: 'dot', text: `searching ${resource}` });
 			try {
 				const response = await fetch(`${BASE_URL}/search/${resource}?${query.toString()}`, {
 					headers: {
 						Authorization: `Bearer ${apiKey}`,
 						Accept: 'application/json',
-						'User-Agent': 'node-red-contrib-domainkits/0.1.0',
+						'User-Agent': 'node-red-contrib-domainkits/0.3.5',
 					},
 				});
 				const body = await response.json();

@@ -1,15 +1,15 @@
 <script type="text/javascript">
 	(function () {
 		var FIELDS = {
-			nrds: ['keyword', 'tld', 'position', 'length', 'type', 'days_range', 'reg_date', 'period', 'has_sale', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
-			'nrds-live': ['keyword', 'tld', 'position', 'length', 'type', 'days_range', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
-			expired: ['keyword', 'tld', 'position', 'length', 'type', 'status', 'age_range', 'hold', 'auction_date', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
-			aged: ['keyword', 'tld', 'position', 'length', 'type', 'age_range', 'has_sale', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
-			active: ['keyword', 'tld', 'position', 'length', 'type', 'status', 'no_number', 'no_hyphen', 'sort', 'limit', 'offset'],
-			deleted: ['keyword', 'tld', 'position', 'length', 'type', 'age_range', 'hold', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
-			market: ['keyword', 'tld', 'position', 'length', 'type', 'platform', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'],
+			nrds: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'create_date_start', 'create_date_end', 'period_min', 'period_max', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
+			'nrds-live': ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'create_date_start', 'create_date_end', 'exclude_query', 'sort', 'limit', 'offset'],
+			expired: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'status', 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'auction_date_start', 'auction_date_end', 'has_hold', 'exclude_query', 'sort', 'limit', 'offset'],
+			aged: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'age_min', 'age_max', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
+			active: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
+			deleted: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'has_hold', 'exclude_query', 'sort', 'limit', 'offset'],
+			market: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'platform', 'listed_days_min', 'listed_days_max', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
 		};
-		var ALL = ['keyword', 'tld', 'position', 'length', 'type', 'status', 'age_range', 'days_range', 'reg_date', 'period', 'has_sale', 'hold', 'auction_date', 'platform', 'no_number', 'no_hyphen', 'exclude', 'sort', 'limit', 'offset'];
+		var ALL = ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'status', 'age_min', 'age_max', 'create_date_start', 'create_date_end', 'found_date_start', 'found_date_end', 'auction_date_start', 'auction_date_end', 'period_min', 'period_max', 'has_hold', 'listed_days_min', 'listed_days_max', 'platform', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'];
 
 		RED.nodes.registerType('domainkits-search', {
 			category: 'network',
@@ -22,23 +22,29 @@
 				name: { value: '' },
 				api: { value: '', type: 'domainkits-api', required: true },
 				resource: { value: 'nrds' },
-				keyword: { value: '' },
+				query: { value: '' },
 				tld: { value: 'com' },
 				position: { value: '' },
-				length: { value: '' },
-				type: { value: '' },
+				length_min: { value: '' },
+				length_max: { value: '' },
+				composition: { value: '' },
 				status: { value: '' },
-				age_range: { value: '' },
-				days_range: { value: '' },
-				reg_date: { value: '' },
-				period: { value: '' },
-				has_sale: { value: false },
-				hold: { value: '' },
-				auction_date: { value: '' },
+				age_min: { value: '' },
+				age_max: { value: '' },
+				create_date_start: { value: '' },
+				create_date_end: { value: '' },
+				found_date_start: { value: '' },
+				found_date_end: { value: '' },
+				auction_date_start: { value: '' },
+				auction_date_end: { value: '' },
+				period_min: { value: '' },
+				period_max: { value: '' },
+				has_hold: { value: '' },
+				listed_days_min: { value: '' },
+				listed_days_max: { value: '' },
 				platform: { value: '' },
-				no_number: { value: false },
-				no_hyphen: { value: false },
-				exclude: { value: '' },
+				has_sale: { value: false },
+				exclude_query: { value: '' },
 				sort: { value: '' },
 				limit: { value: 15 },
 				offset: { value: 0 },
@@ -82,84 +88,110 @@
 			<option value="market">For sale</option>
 		</select>
 	</div>
-	<div class="form-row" id="form-row-keyword">
-		<label for="node-input-keyword"><i class="fa fa-search"></i> Keyword</label>
-		<input type="text" id="node-input-keyword" placeholder="min 3 characters, optional" />
+	<div class="form-row" id="form-row-query">
+		<label for="node-input-query"><i class="fa fa-search"></i> Query</label>
+		<input type="text" id="node-input-query" placeholder="min 2 characters, optional" />
 	</div>
 	<div class="form-row" id="form-row-tld">
 		<label for="node-input-tld"><i class="fa fa-globe"></i> TLD</label>
-		<input type="text" id="node-input-tld" placeholder="com" />
+		<input type="text" id="node-input-tld" placeholder="com or com,net,org (single value on the live feed)" />
 	</div>
 	<div class="form-row" id="form-row-position">
 		<label for="node-input-position"><i class="fa fa-align-left"></i> Position</label>
 		<select id="node-input-position">
 			<option value="">Anywhere</option>
 			<option value="start">Start</option>
-			<option value="middle">Middle</option>
 			<option value="end">End</option>
+			<option value="middle">Middle</option>
 		</select>
 	</div>
-	<div class="form-row" id="form-row-length">
-		<label for="node-input-length"><i class="fa fa-arrows-h"></i> Length</label>
-		<input type="text" id="node-input-length" placeholder="5-10, 10, 8-12" />
+	<div class="form-row" id="form-row-length_min">
+		<label for="node-input-length_min"><i class="fa fa-arrows-h"></i> Length min</label>
+		<input type="number" id="node-input-length_min" min="1" max="63" />
 	</div>
-	<div class="form-row" id="form-row-type">
-		<label for="node-input-type"><i class="fa fa-font"></i> Composition</label>
-		<select id="node-input-type">
+	<div class="form-row" id="form-row-length_max">
+		<label for="node-input-length_max"><i class="fa fa-arrows-h"></i> Length max</label>
+		<input type="number" id="node-input-length_max" min="1" max="63" />
+	</div>
+	<div class="form-row" id="form-row-composition">
+		<label for="node-input-composition"><i class="fa fa-font"></i> Composition</label>
+		<select id="node-input-composition">
 			<option value="">Any</option>
-			<option value="all_alpha">Letters only</option>
-			<option value="all_number">Digits only</option>
+			<option value="all_alpha=true">Letters only</option>
+			<option value="all_number=true">Digits only</option>
+			<option value="has_number=true">Has digits</option>
+			<option value="has_number=false">No digits</option>
+			<option value="has_hyphen=true">Has hyphen</option>
+			<option value="has_hyphen=false">No hyphens</option>
 		</select>
 	</div>
 	<div class="form-row" id="form-row-status">
 		<label for="node-input-status"><i class="fa fa-hourglass-half"></i> Status</label>
-		<input type="text" id="node-input-status" placeholder="expired: expired | redemption | pending_delete" />
+		<input type="text" id="node-input-status" placeholder="expired | redemption | pending_delete" />
 	</div>
-	<div class="form-row" id="form-row-age_range">
-		<label for="node-input-age_range"><i class="fa fa-calendar"></i> Age</label>
-		<input type="text" id="node-input-age_range" placeholder="10-20, 25, 20-25" />
+	<div class="form-row" id="form-row-age_min">
+		<label for="node-input-age_min"><i class="fa fa-calendar"></i> Age min</label>
+		<input type="number" id="node-input-age_min" min="0" max="100" />
 	</div>
-	<div class="form-row" id="form-row-days_range">
-		<label for="node-input-days_range"><i class="fa fa-calendar-o"></i> Days range</label>
-		<select id="node-input-days_range">
+	<div class="form-row" id="form-row-age_max">
+		<label for="node-input-age_max"><i class="fa fa-calendar"></i> Age max</label>
+		<input type="number" id="node-input-age_max" min="0" max="100" />
+	</div>
+	<div class="form-row" id="form-row-create_date_start">
+		<label for="node-input-create_date_start"><i class="fa fa-calendar-check-o"></i> Created from</label>
+		<input type="text" id="node-input-create_date_start" placeholder="2026-07-01" />
+	</div>
+	<div class="form-row" id="form-row-create_date_end">
+		<label for="node-input-create_date_end"><i class="fa fa-calendar-check-o"></i> Created to</label>
+		<input type="text" id="node-input-create_date_end" placeholder="2026-07-31" />
+	</div>
+	<div class="form-row" id="form-row-found_date_start">
+		<label for="node-input-found_date_start"><i class="fa fa-calendar-o"></i> Observed from</label>
+		<input type="text" id="node-input-found_date_start" placeholder="2026-08-01" />
+	</div>
+	<div class="form-row" id="form-row-found_date_end">
+		<label for="node-input-found_date_end"><i class="fa fa-calendar-o"></i> Observed to</label>
+		<input type="text" id="node-input-found_date_end" placeholder="2026-08-15" />
+	</div>
+	<div class="form-row" id="form-row-auction_date_start">
+		<label for="node-input-auction_date_start"><i class="fa fa-gavel"></i> Auction from</label>
+		<input type="text" id="node-input-auction_date_start" placeholder="2026-08-01" />
+	</div>
+	<div class="form-row" id="form-row-auction_date_end">
+		<label for="node-input-auction_date_end"><i class="fa fa-gavel"></i> Auction to</label>
+		<input type="text" id="node-input-auction_date_end" placeholder="2026-08-15" />
+	</div>
+	<div class="form-row" id="form-row-period_min">
+		<label for="node-input-period_min"><i class="fa fa-clock-o"></i> Term min (years)</label>
+		<input type="number" id="node-input-period_min" min="1" max="10" />
+	</div>
+	<div class="form-row" id="form-row-period_max">
+		<label for="node-input-period_max"><i class="fa fa-clock-o"></i> Term max (years)</label>
+		<input type="number" id="node-input-period_max" min="1" max="10" />
+	</div>
+	<div class="form-row" id="form-row-has_hold">
+		<label for="node-input-has_hold"><i class="fa fa-pause"></i> Hold</label>
+		<select id="node-input-has_hold">
 			<option value="">Any</option>
-			<option value="0-10">0-10</option>
-			<option value="10-20">10-20</option>
-			<option value="20+">20+</option>
+			<option value="true">Has hold</option>
+			<option value="false">No hold</option>
 		</select>
 	</div>
-	<div class="form-row" id="form-row-reg_date">
-		<label for="node-input-reg_date"><i class="fa fa-calendar-check-o"></i> Reg date</label>
-		<input type="text" id="node-input-reg_date" placeholder="2026-07-10, 2026-07, 2026-07-01:2026-07-25" />
+	<div class="form-row" id="form-row-listed_days_min">
+		<label for="node-input-listed_days_min"><i class="fa fa-tags"></i> Listed days min</label>
+		<input type="number" id="node-input-listed_days_min" min="1" max="3" />
 	</div>
-	<div class="form-row" id="form-row-period">
-		<label for="node-input-period"><i class="fa fa-clock-o"></i> Term (years)</label>
-		<select id="node-input-period">
-			<option value="">Any</option>
-			<option value="1">1</option>
-			<option value="2-5">2-5</option>
-			<option value="6+">6+</option>
-		</select>
-	</div>
-	<div class="form-row" id="form-row-hold">
-		<label for="node-input-hold"><i class="fa fa-pause"></i> Hold</label>
-		<select id="node-input-hold">
-			<option value="">Any</option>
-			<option value="has_hold">Has hold</option>
-			<option value="no_hold">No hold</option>
-		</select>
-	</div>
-	<div class="form-row" id="form-row-auction_date">
-		<label for="node-input-auction_date"><i class="fa fa-gavel"></i> Auction date</label>
-		<input type="text" id="node-input-auction_date" placeholder="today, tomorrow, 2026-08-01" />
+	<div class="form-row" id="form-row-listed_days_max">
+		<label for="node-input-listed_days_max"><i class="fa fa-tags"></i> Listed days max</label>
+		<input type="number" id="node-input-listed_days_max" min="1" max="3" />
 	</div>
 	<div class="form-row" id="form-row-platform">
 		<label for="node-input-platform"><i class="fa fa-shopping-cart"></i> Marketplace</label>
-		<input type="text" id="node-input-platform" placeholder="Sedo, Godaddy, Afternic, Dan, Hugedomains, 4.cn" />
+		<input type="text" id="node-input-platform" placeholder="sedo,afternic (case-insensitive, comma-separated)" />
 	</div>
-	<div class="form-row" id="form-row-exclude">
-		<label for="node-input-exclude"><i class="fa fa-ban"></i> Exclude</label>
-		<input type="text" id="node-input-exclude" placeholder="negative keywords, comma separated" />
+	<div class="form-row" id="form-row-exclude_query">
+		<label for="node-input-exclude_query"><i class="fa fa-ban"></i> Exclude</label>
+		<input type="text" id="node-input-exclude_query" placeholder="negative keywords, comma separated" />
 	</div>
 	<div class="form-row" id="form-row-sort">
 		<label for="node-input-sort"><i class="fa fa-sort"></i> Sort</label>
@@ -173,14 +205,6 @@
 		<label for="node-input-offset"><i class="fa fa-step-forward"></i> Offset</label>
 		<input type="number" id="node-input-offset" min="0" />
 	</div>
-	<div class="form-row" id="form-row-no_number">
-		<label style="width:auto" for="node-input-no_number"><i class="fa fa-hashtag"></i> Exclude digits</label>
-		<input type="checkbox" id="node-input-no_number" style="width:auto; vertical-align:top" />
-	</div>
-	<div class="form-row" id="form-row-no_hyphen">
-		<label style="width:auto" for="node-input-no_hyphen"><i class="fa fa-minus"></i> Exclude hyphens</label>
-		<input type="checkbox" id="node-input-no_hyphen" style="width:auto; vertical-align:top" />
-	</div>
 	<div class="form-row" id="form-row-has_sale">
 		<label style="width:auto" for="node-input-has_sale"><i class="fa fa-tags"></i> Listed for sale only</label>
 		<input type="checkbox" id="node-input-has_sale" style="width:auto; vertical-align:top" />
@@ -193,21 +217,21 @@
 	<h3>Inputs</h3>
 	<dl class="message-properties">
 		<dt class="optional">query <span class="property-type">object</span></dt>
-		<dd>Overrides any configured parameter for this run, e.g. <code>{"keyword":"clinic","reg_date":"2026-07-10","limit":50}</code>. Keys match the REST parameters. <code>query.resource</code> switches the resource per message.</dd>
+		<dd>Overrides any configured parameter for this run, e.g. <code>{"query":"clinic","create_date_start":"2026-07-10","limit":50}</code>. Keys match the REST parameters. <code>query.resource</code> switches the resource per message.</dd>
 	</dl>
 
 	<h3>Outputs</h3>
 	<dl class="message-properties">
 		<dt>payload <span class="property-type">array</span></dt>
-		<dd>One object per domain. Newly registered results carry <code>domain</code>, <code>registered_date</code>, <code>expiry_date</code>, <code>tld_count</code>; the live feed carries <code>tld</code> in place of <code>tld_count</code>; other resources add <code>age</code>, <code>status</code> or <code>marketplace</code>.</dd>
+		<dd>One object per domain: <code>domain</code>, <code>tld</code>, <code>length</code> everywhere, plus the resource's own fields such as <code>created</code>, <code>expires</code>, <code>age</code>, <code>status</code>, <code>for_sale</code>, <code>platform</code>, <code>components</code>, <code>tld_count</code>.</dd>
 		<dt>total <span class="property-type">number</span></dt>
 		<dd>Size of the full result set. Page through it with <code>offset</code>; a single request returns at most 500 rows.</dd>
 	</dl>
 
 	<h3>Details</h3>
-	<p><b>Newly registered vs live feed.</b> <code>nrds</code> reads the zone files and holds 60 days. <code>nrds-live</code> reads Certificate Transparency and holds 3 days: a name reaches it once a certificate is issued, which can be before the zone files carry it, so it surfaces names <code>nrds</code> cannot show yet. It runs on a smaller per-minute quota.</p>
+	<p><b>Parameter grammar.</b> Numeric ranges are min/max pairs, date ranges are start/end pairs; either side may be omitted, equal bounds select an exact value. Composition filters accept only <code>true</code>/<code>false</code>. Unknown names and values return 400 with the supported values in the message.</p>
+	<p><b>Newly registered vs live feed.</b> <code>nrds</code> holds 60 days, refreshed daily. <code>nrds-live</code> holds the last 3 days with live updates, so it surfaces names registered hours ago, and also carries <code>.ai</code> and <code>.io</code>. It takes a single <code>tld</code> value and runs on a smaller per-minute quota.</p>
 	<p><b>gTLDs only.</b> Country-code TLDs are not indexed: a query for <code>.de</code> or <code>.co</code> returns an empty result set, not an error. <code>nrds-live</code> is the exception and also carries <code>.ai</code> and <code>.io</code>.</p>
 	<p><b>No PII.</b> Responses contain no personal data: domain name, dates, status and TLD counts only.</p>
-	<p><code>length</code> and <code>age_range</code> accept a preset band (<code>5-10</code>), an exact value (<code>10</code>), or a range (<code>8-12</code>). <code>reg_date</code> accepts a day, month, year, or <code>from:to</code> range.</p>
-	<p>The same key works across every DomainKits endpoint. Rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
+	<p>The same key works across every DomainKits endpoint. Full parameter reference: <a href="https://domainkits.com/dev/api-docs" target="_blank">API docs</a> and <a href="https://domainkits.com/dev/openapi.yaml" target="_blank">OpenAPI spec</a>.</p>
 </script>

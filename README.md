@@ -37,18 +37,18 @@ Searches seven domain inventories. Pick the resource in the edit dialog; the fil
 | Expired | Domains in the deletion cycle: expired, redemption, pending delete |
 | Aged | Domains with 5 to 20+ years of registration history |
 | Active | Currently registered domains |
-| Deleted | Dropped domains (requires a keyword) |
+| Deleted | Dropped domains |
 | For sale | Domains listed on marketplaces |
 
-Typical newly registered query: keyword `shop`, TLD `com`, registration date `2026-07-10`, letters only, no hyphens.
+Typical newly registered query: keyword `shop`, TLD `com`, registered on `2026-07-10`, letters only.
 
 Configure filters in the edit dialog, or override any of them per message via `msg.query`:
 
 ```json
-{ "keyword": "shop", "tld": "com", "reg_date": "2026-07-10", "type": "all_alpha", "limit": 50 }
+{ "query": "shop", "tld": "com", "create_date_start": "2026-07-10", "create_date_end": "2026-07-10", "all_alpha": "true", "limit": 50 }
 ```
 
-`length` and `age_range` accept a preset band (`5-10`), an exact value (`10`), or a range (`8-12`). `reg_date` accepts a day (`2026-07-10`), a month (`2026-07`), a year (`2026`), or a `from:to` range.
+Numeric ranges are `_min`/`_max` pairs (`length_min`/`length_max`, `age_min`/`age_max`), date ranges are `_start`/`_end` pairs (`create_date_start`/`create_date_end`); either side may be omitted, equal bounds select an exact value. Composition booleans accept only `true`/`false`. Unknown parameter names and values return 400 with the supported values in the message. Full reference: the [OpenAPI spec](https://domainkits.com/dev/openapi.yaml).
 
 The two registration feeds read from different places, so they answer different questions. Newly registered reads the zone files and holds 60 days; it is the complete view for the generic TLDs. The live feed reads Certificate Transparency and holds 3 days: a name reaches it once a certificate is issued, which can be before the zone files carry it, so it surfaces names the zone feed cannot show yet. A live row carries `tld` in place of `tld_count`, and the endpoint runs on a smaller per-minute quota. Switch to it per message with `{ "resource": "nrds-live" }` in `msg.query`.
 
@@ -62,7 +62,7 @@ Set the operation and target in the edit dialog, or per message via `msg.operati
 
 ## Example flows
 
-**New registration watch**: Inject (daily) sets `msg.query` to `{"keyword":"yourbrand"}`, domain search (newly registered) returns the day's matches, a switch node routes non-empty results to a notification.
+**New registration watch**: Inject (daily) sets `msg.query` to `{"query":"yourbrand"}`, domain search (newly registered) returns the day's matches, a switch node routes non-empty results to a notification.
 
 **Drop watch**: Inject (daily), domain search (expired, stage pending delete, age 20+), function filters against your list, notification.
 

@@ -10,7 +10,7 @@ module.exports = function (RED) {
 		'tld-check': { path: '/tld-check', param: 'prefix', list: false },
 		typosquat: { path: '/typosquat', param: 'domain', list: false },
 		'ns-reverse': { path: '/ns-reverse', param: 'ns', list: true },
-		'monitor-changes': { path: '/monitor/changes', param: 'keyword', list: true },
+		'monitor-changes': { path: '/monitor/changes', param: 'query', list: true },
 		'ct-subdomains': { path: '/ct/subdomains', param: 'domain', list: true },
 		'ct-certs': { path: '/ct/certs', param: 'domain', list: true },
 		'ct-search': { path: '/ct/search', param: 'keyword', list: true },
@@ -18,7 +18,7 @@ module.exports = function (RED) {
 		'tld-trends-active': { path: '/trends/tlds/active', param: 'tld', list: false },
 		'keyword-trends-hot': { path: '/trends/keywords/hot', param: null, list: false },
 		'keyword-trends-emerging': { path: '/trends/keywords/emerging', param: null, list: false },
-		'keyword-trends-prefix': { path: '/trends/keywords/prefix', param: 'prefix', list: false },
+		'keyword-trends-prefix': { path: '/trends/keywords/prefix', param: null, list: false },
 		usage: { path: '/usage', param: null, list: false },
 	};
 
@@ -60,7 +60,7 @@ module.exports = function (RED) {
 					headers: {
 						Authorization: `Bearer ${apiKey}`,
 						Accept: 'application/json',
-						'User-Agent': 'node-red-contrib-domainkits/0.1.0',
+						'User-Agent': 'node-red-contrib-domainkits/0.3.5',
 					},
 				});
 				const body = await response.json();
