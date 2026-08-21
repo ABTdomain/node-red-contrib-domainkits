@@ -44,8 +44,6 @@ module.exports = function (RED) {
 				query.set(key, String(value));
 			}
 
-			// The editor offers one composition dropdown; msg.query may instead
-			// carry the four engine booleans directly and then wins.
 			if (config.composition && !COMPOSITION.some((k) => override[k] !== undefined)) {
 				const [key, value] = config.composition.split('=');
 				if (allowed.includes(key)) query.set(key, value);
