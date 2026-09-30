@@ -3,7 +3,6 @@ module.exports = function (RED) {
 	const OPS = {
 		whois: { path: '/whois', param: 'domain', list: false },
 		dns: { path: '/dns', param: 'domain', list: false },
-		safety: { path: '/safety', param: 'domain', list: false },
 		'ip-lookup': { path: '/ip-lookup', param: 'query', list: false },
 		registrar: { path: '/registrar', param: 'query', list: false },
 		'status-guide': { path: '/status-guide', param: 'query', list: false },

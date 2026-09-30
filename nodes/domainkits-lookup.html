@@ -3,7 +3,6 @@
 		var LABELS = {
 			whois: 'Domain',
 			dns: 'Domain',
-			safety: 'Domain',
 			'ip-lookup': 'IP or domain',
 			registrar: 'Registrar name',
 			'status-guide': 'EPP status',
@@ -66,7 +65,6 @@
 		<select id="node-input-operation">
 			<option value="whois">WHOIS</option>
 			<option value="dns">DNS records</option>
-			<option value="safety">Safety check</option>
 			<option value="ip-lookup">IP lookup</option>
 			<option value="registrar">Registrar lookup</option>
 			<option value="status-guide">EPP status guide</option>
@@ -92,7 +90,7 @@
 </script>
 
 <script type="text/html" data-help-name="domainkits-lookup">
-	<p>Single lookups and reports against the DomainKits API: WHOIS, DNS, safety, IP geolocation, registrar, EPP status, TLD availability, typosquat variants, reverse nameserver, domain change monitoring, Certificate Transparency and trends.</p>
+	<p>Single lookups and reports against the DomainKits API: WHOIS, DNS, IP geolocation, registrar, EPP status, TLD availability, typosquat variants, reverse nameserver, domain change monitoring, Certificate Transparency and trends.</p>
 
 	<h3>Inputs</h3>
 	<dl class="message-properties">
@@ -101,7 +99,7 @@
 		<dt class="optional">operation <span class="property-type">string</span></dt>
 		<dd>Overrides the configured operation.</dd>
 		<dt class="optional">query <span class="property-type">object</span></dt>
-		<dd>Extra REST parameters for the chosen operation, e.g. <code>{"type":"all_number","limit":50}</code> for reverse nameserver.</dd>
+		<dd>Extra REST parameters for the chosen operation, e.g. <code>{"limit":50}</code>. Every parameter is listed in the <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</dd>
 	</dl>
 
 	<h3>Outputs</h3>
@@ -112,7 +110,6 @@
 
 	<h3>Details</h3>
 	<p><b>No PII.</b> WHOIS results are limited to registrar, dates, status codes and nameservers; registrant names, emails, addresses and phone numbers are not returned.</p>
-	<p>WHOIS, DNS, safety, IP lookup and Certificate Transparency work on any domain, ccTLDs included. The search indexes and trends are gTLD only.</p>
-	<p><b>Certificate Transparency parameters.</b> The three CT operations take <code>after</code>, <code>before</code>, <code>scope</code>, <code>sort</code>, <code>issuer</code>, <code>cert_type</code> and <code>limit</code> through <code>msg.query</code>. <code>scope</code> is <code>valid</code> for the running half year or <code>all</code> back to 2020; <code>after</code> and <code>before</code> take <code>YYYY-MM-DD</code> and filter on log time. CT search also takes <code>field</code>: <code>reg</code> matches the registered domain and returns every hostname under it, <code>sld</code> matches the subdomain label only, <code>domain</code> matches anywhere in the hostname.</p>
-	<p>The same key works across every DomainKits endpoint. Rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
+	<p>WHOIS, DNS, IP lookup and Certificate Transparency work on any domain, ccTLDs included. The search indexes and trends are gTLD only.</p>
+	<p>The same key works across every DomainKits endpoint. Parameters and rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
 </script>

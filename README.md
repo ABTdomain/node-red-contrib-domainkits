@@ -18,7 +18,7 @@ npm install node-red-contrib-domainkits
 
 ## Credentials
 
-You need a DomainKits API key. Sign up at [domainkits.com](https://domainkits.com/pricing); API access requires a Premium or higher plan, and Premium includes a trial period. Keys start with `dk_`.
+You need a DomainKits API key. Sign up at [domainkits.com](https://domainkits.com/pricing); API access requires a Premium or higher plan. Keys start with `dk_`.
 
 Add the key once in the **DomainKits API** configuration node. Both nodes share it.
 
@@ -50,7 +50,6 @@ One node, one operation per call:
 |---|---|
 | WHOIS | `/whois` |
 | DNS records | `/dns` |
-| Safety check | `/safety` |
 | IP lookup | `/ip-lookup` |
 | Registrar lookup | `/registrar` |
 | EPP status guide | `/status-guide` |
