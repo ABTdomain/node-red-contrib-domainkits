@@ -55,7 +55,7 @@ module.exports = function (RED) {
 					headers: {
 						Authorization: `Bearer ${apiKey}`,
 						Accept: 'application/json',
-						'User-Agent': 'node-red-contrib-domainkits/0.3.8',
+						'User-Agent': 'node-red-contrib-domainkits/0.4.1',
 					},
 				});
 				const body = await response.json();
