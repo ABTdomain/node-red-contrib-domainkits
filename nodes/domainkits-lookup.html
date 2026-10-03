@@ -12,7 +12,7 @@
 			'monitor-changes': 'Keyword',
 			'ct-subdomains': 'Domain',
 			'ct-certs': 'Domain',
-			'ct-search': 'Keyword',
+			'hostname-search': 'Keyword',
 			'tld-trends-newly': 'TLD',
 			'tld-trends-active': 'TLD',
 			'keyword-trends-hot': '',
@@ -74,7 +74,7 @@
 			<option value="monitor-changes">Domain changes</option>
 			<option value="ct-subdomains">CT subdomains</option>
 			<option value="ct-certs">CT certificates</option>
-			<option value="ct-search">CT search</option>
+			<option value="hostname-search">Hostname search</option>
 			<option value="tld-trends-newly">TLD trends, new registrations</option>
 			<option value="tld-trends-active">TLD trends, active volume</option>
 			<option value="keyword-trends-hot">Keyword trends, hot</option>
@@ -90,7 +90,7 @@
 </script>
 
 <script type="text/html" data-help-name="domainkits-lookup">
-	<p>Single lookups and reports against the DomainKits API: WHOIS, DNS, IP geolocation, registrar, EPP status, TLD availability, typosquat variants, reverse nameserver, domain change monitoring, Certificate Transparency and trends.</p>
+	<p>Single lookups and reports against the DomainKits API: WHOIS, DNS, IP geolocation, registrar, EPP status, TLD availability, typosquat variants, reverse nameserver, domain change monitoring, Certificate Transparency, hostname search and trends.</p>
 
 	<h3>Inputs</h3>
 	<dl class="message-properties">
@@ -105,11 +105,11 @@
 	<h3>Outputs</h3>
 	<dl class="message-properties">
 		<dt>payload <span class="property-type">object | array</span></dt>
-		<dd>The lookup result. List operations also set <code>msg.total</code>.</dd>
+		<dd>The lookup result. List operations also set <code>msg.total</code>; hostname search also sets <code>msg.window</code>, the time range searched.</dd>
 	</dl>
 
 	<h3>Details</h3>
 	<p><b>No PII.</b> WHOIS results are limited to registrar, dates, status codes and nameservers; registrant names, emails, addresses and phone numbers are not returned.</p>
-	<p>WHOIS, DNS, IP lookup and Certificate Transparency work on any domain, ccTLDs included. The search indexes and trends are gTLD only.</p>
+	<p>WHOIS, DNS, IP lookup, Certificate Transparency and hostname search work on any domain, ccTLDs included. The search indexes and trends are gTLD only.</p>
 	<p>The same key works across every DomainKits endpoint. Parameters and rate limits: <a href="https://domainkits.com/dev/api-docs" target="_blank">API reference</a>.</p>
 </script>

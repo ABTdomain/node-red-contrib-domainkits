@@ -59,7 +59,7 @@ One node, one operation per call:
 | Domain change monitoring | `/monitor/changes` |
 | CT subdomains | `/ct/subdomains` |
 | CT certificates | `/ct/certs` |
-| CT search | `/ct/search` |
+| Hostname search | `/search/hostname` |
 | TLD trends | `/trends/tlds/*` |
 | Keyword trends | `/trends/keywords/*` |
 | Account usage | `/usage` |

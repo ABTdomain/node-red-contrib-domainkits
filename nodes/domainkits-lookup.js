@@ -12,7 +12,7 @@ module.exports = function (RED) {
 		'monitor-changes': { path: '/monitor/changes', param: 'query', list: true },
 		'ct-subdomains': { path: '/ct/subdomains', param: 'domain', list: true },
 		'ct-certs': { path: '/ct/certs', param: 'domain', list: true },
-		'ct-search': { path: '/ct/search', param: 'keyword', list: true },
+		'hostname-search': { path: '/search/hostname', param: 'q', list: true },
 		'tld-trends-newly': { path: '/trends/tlds/newly', param: 'tld', list: false },
 		'tld-trends-active': { path: '/trends/tlds/active', param: 'tld', list: false },
 		'keyword-trends-hot': { path: '/trends/keywords/hot', param: null, list: false },
@@ -72,6 +72,9 @@ module.exports = function (RED) {
 				msg.payload = body.data !== undefined && body.data !== null ? body.data : body;
 				if (op.list) {
 					msg.total = body.total || 0;
+				}
+				if (body.window) {
+					msg.window = body.window;
 				}
 				msg.operation = operation;
 				node.status({ fill: 'green', shape: 'dot', text: `${operation} ok` });
