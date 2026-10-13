@@ -7,7 +7,6 @@ module.exports = function (RED) {
 	];
 	const RESOURCES = {
 		nrds: [...COMMON, 'create_date_start', 'create_date_end', 'period_min', 'period_max', 'has_sale'],
-		'nrds-live': [...COMMON, 'create_date_start', 'create_date_end'],
 		expired: [...COMMON, 'status', 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'auction_date_start', 'auction_date_end', 'has_hold'],
 		aged: [...COMMON, 'age_min', 'age_max', 'has_sale'],
 		active: [...COMMON, 'has_sale'],

@@ -2,7 +2,6 @@
 	(function () {
 		var FIELDS = {
 			nrds: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'create_date_start', 'create_date_end', 'period_min', 'period_max', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
-			'nrds-live': ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'create_date_start', 'create_date_end', 'exclude_query', 'sort', 'limit', 'offset'],
 			expired: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'status', 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'auction_date_start', 'auction_date_end', 'has_hold', 'exclude_query', 'sort', 'limit', 'offset'],
 			aged: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'age_min', 'age_max', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
 			active: ['query', 'tld', 'position', 'length_min', 'length_max', 'composition', 'has_sale', 'exclude_query', 'sort', 'limit', 'offset'],
@@ -80,7 +79,6 @@
 		<label for="node-input-resource"><i class="fa fa-database"></i> Resource</label>
 		<select id="node-input-resource">
 			<option value="nrds">Newly registered</option>
-			<option value="nrds-live">Newly registered, live feed</option>
 			<option value="expired">Expired</option>
 			<option value="aged">Aged</option>
 			<option value="active">Active</option>
@@ -94,7 +92,7 @@
 	</div>
 	<div class="form-row" id="form-row-tld">
 		<label for="node-input-tld"><i class="fa fa-globe"></i> TLD</label>
-		<input type="text" id="node-input-tld" placeholder="com or com,net,org (single value on the live feed)" />
+		<input type="text" id="node-input-tld" placeholder="com or com,net,org" />
 	</div>
 	<div class="form-row" id="form-row-position">
 		<label for="node-input-position"><i class="fa fa-align-left"></i> Position</label>
@@ -212,7 +210,7 @@
 </script>
 
 <script type="text/html" data-help-name="domainkits-search">
-	<p>Searches the DomainKits domain inventories. The default resource is newly registered domains: every domain registered in the last 60 days, refreshed daily. The same node also covers the live registration feed, expired, aged, active, deleted and for-sale domains.</p>
+	<p>Searches the DomainKits domain inventories. The default resource is newly registered domains: every domain registered in the last 60 days, refreshed daily. The same node also covers expired, aged, active, deleted and for-sale domains.</p>
 
 	<h3>Inputs</h3>
 	<dl class="message-properties">
@@ -223,15 +221,13 @@
 	<h3>Outputs</h3>
 	<dl class="message-properties">
 		<dt>payload <span class="property-type">array</span></dt>
-		<dd>One object per domain: <code>domain</code>, <code>tld</code>, <code>length</code> everywhere, plus the resource's own fields such as <code>created</code>, <code>expires</code>, <code>age</code>, <code>status</code>, <code>for_sale</code>, <code>platform</code>, <code>components</code>, <code>tld_count</code>.</dd>
+		<dd>One object per domain: <code>domain</code>, <code>tld</code>, <code>length</code> everywhere, plus the resource's own fields such as <code>created</code>, <code>expires</code>, <code>age</code>, <code>status</code>, <code>for_sale</code>, <code>platform</code>, <code>tld_count</code>.</dd>
 		<dt>total <span class="property-type">number</span></dt>
 		<dd>Size of the full result set. Page through it with <code>offset</code>; a single request returns at most 500 rows.</dd>
 	</dl>
 
 	<h3>Details</h3>
 	<p><b>Parameter grammar.</b> Numeric ranges are min/max pairs, date ranges are start/end pairs; either side may be omitted, equal bounds select an exact value. Composition filters accept only <code>true</code>/<code>false</code>. Unknown names and values return 400 with the supported values in the message.</p>
-	<p><b>Newly registered vs live feed.</b> <code>nrds</code> holds 60 days, refreshed daily. <code>nrds-live</code> holds the last 3 days with live updates, so it surfaces names registered hours ago, and also carries <code>.ai</code> and <code>.io</code>. It takes a single <code>tld</code> value and runs on a smaller per-minute quota.</p>
-	<p><b>gTLDs only.</b> Country-code TLDs are not indexed: a query for <code>.de</code> or <code>.co</code> returns an empty result set, not an error. <code>nrds-live</code> is the exception and also carries <code>.ai</code> and <code>.io</code>.</p>
 	<p><b>No PII.</b> Responses contain no personal data: domain name, dates, status and TLD counts only.</p>
 	<p>The same key works across every DomainKits endpoint. Full parameter reference: <a href="https://domainkits.com/dev/api-docs" target="_blank">API docs</a> and <a href="https://domainkits.com/dev/openapi.yaml" target="_blank">OpenAPI spec</a>.</p>
 </script>

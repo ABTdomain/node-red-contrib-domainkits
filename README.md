@@ -26,12 +26,11 @@ Add the key once in the **DomainKits API** configuration node. Both nodes share 
 
 ### domain search
 
-One node, seven inventories. Pick the resource in the edit dialog; the filter fields adjust to match.
+One node, six inventories. Pick the resource in the edit dialog; the filter fields adjust to match.
 
 | Resource | Endpoint |
 |---|---|
 | Newly registered (default) | `/search/nrds` |
-| Newly registered, live feed | `/search/nrds-live` |
 | Expired | `/search/expired` |
 | Aged | `/search/aged` |
 | Active | `/search/active` |
