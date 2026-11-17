@@ -6,7 +6,7 @@ module.exports = function (RED) {
 		'exclude_query', 'sort', 'limit', 'offset',
 	];
 	const RESOURCES = {
-		nrds: [...COMMON, 'create_date_start', 'create_date_end', 'period_min', 'period_max', 'has_sale'],
+		nrds: [...COMMON, 'create_date_start', 'create_date_end', 'period_min', 'period_max', 'mx_status', 'mx', 'has_sale'],
 		expired: [...COMMON, 'status', 'age_min', 'age_max', 'found_date_start', 'found_date_end', 'auction_date_start', 'auction_date_end', 'has_hold'],
 		aged: [...COMMON, 'age_min', 'age_max', 'has_sale'],
 		active: [...COMMON, 'has_sale'],
